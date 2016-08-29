@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+        <meta charset="utf-8" />
+        <title>feng - linux运维</title>
+        <link rel="stylesheet" href="/theme/css/main.css" />
+
+        <!--[if IE]>
+            <script src="https://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+</head>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+                <h1><a href="/">feng </a></h1>
+                <nav><ul>
+                    <li><a href="/category/hpc.html">hpc</a></li>
+                    <li class="active"><a href="/category/linuxyun-wei.html">linux运维</a></li>
+                    <li><a href="/category/misc.html">misc</a></li>
+                    <li><a href="/category/wang-luo.html">网络</a></li>
+                    <li><a href="/category/wang-luo-python.html">网络,python</a></li>
+                </ul></nav>
+        </header><!-- /#banner -->
+
+            <aside id="featured" class="body">
+                <article>
+                    <h1 class="entry-title"><a href="/ansible.html">Ansible</a></h1>
+<footer class="post-info">
+        <abbr class="published" title="2016-08-29T18:50:00+08:00">
+                Published: 一 29 八月 2016
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="/author/feng.html">feng</a>
+        </address>
+<p>In <a href="/category/linuxyun-wei.html">linux运维</a>.</p>
+
+</footer><!-- /.post-info --><hr />
+<p>Ansible 是一种批量部署工具，基于python开发，可以实现批量系统配置，批量程序安装，批量命令运行等任务。</p>
+<h4>Ansible 安装</h4>
+<div class="highlight"><pre><span></span>$ sudo apt-get install ansible
+</pre></div>
+
+
+<p>在使用Ansible时，应该设置ssh免密码登录，这样在管理部署时就会方便很多。</p>
+<div class="highlight"><pre><span></span>$ ssh-keygen
+$ ssh-copy-id hostname
+</pre></div>
+
+
+<h4>Ansible 使用</h4>
+<p>使用Ansible的方法有两种，第一个是使用 <code>add-hoc</code>,第二个是编写<code>playbooks</code>。
+* 使用<code>add-hoc</code></p>
+<div class="highlight"><pre><span></span>$ ansible hostname -m shell -a <span class="s2">&quot;echo </span><span class="nv">$TREM</span><span class="s2">&quot;</span>
+</pre></div>
+
+
+<p>其中，<code>hostname</code> 为将要执行后面命令的节点的主机名，该名称可以在<code>/etc/ansible/hosts</code>中设置。
+<code>-m</code>指定模块，<code>shell</code>为Ansible自带的模块，还可以导入第三方模块以及自定义模块。
+* 使用<code>playbooks</code></p>
+<div class="highlight"><pre><span></span>$ ansible-playbooks test.yml
+</pre></div>
+
+
+<div class="highlight"><pre><span></span># save as test.yml
+---
+- hosts: webservers
+  remote_user: root
+  tasks:
+    - name: test connection
+      ping:
+      remote_user: yourname
+</pre></div>
+
+
+<p><code>playbooks</code>使用的是<a href="http://baike.baidu.com/link?url=4OwtFFPnDMZGA4ktBum_y-Pm4LCDRzK6ZGFmAuG1Tirwmr0w6Zq7YG2RKxqs6tElcAJtcek4eWCuJl7gF0-R0q">YAML</a>语法。</p>                </article>
+            </aside><!-- /#featured -->
+        <section id="extras" class="body">
+                <div class="blogroll">
+                        <h2>blogroll</h2>
+                        <ul>
+                            <li><a href="http://getpelican.com/">Pelican</a></li>
+                            <li><a href="http://python.org/">Python.org</a></li>
+                            <li><a href="http://jinja.pocoo.org/">Jinja2</a></li>
+                            <li><a href="#">You can modify those links in your config file</a></li>
+                        </ul>
+                </div><!-- /.blogroll -->
+                <div class="social">
+                        <h2>social</h2>
+                        <ul>
+
+                            <li><a href="#">You can add links in your config file</a></li>
+                            <li><a href="#">Another social link</a></li>
+                        </ul>
+                </div><!-- /.social -->
+        </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is by <a href="http://coding.smashingmagazine.com/2009/08/04/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+        </footer><!-- /#contentinfo -->
+
+</body>
+</html>

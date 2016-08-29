@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+        <meta charset="utf-8" />
+        <title>slurm系统管理</title>
+        <link rel="stylesheet" href="/theme/css/main.css" />
+
+        <!--[if IE]>
+            <script src="https://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+</head>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+                <h1><a href="/">feng </a></h1>
+                <nav><ul>
+                    <li><a href="/category/hpc.html">hpc</a></li>
+                    <li><a href="/category/linuxyun-wei.html">linux运维</a></li>
+                    <li class="active"><a href="/category/misc.html">misc</a></li>
+                    <li><a href="/category/wang-luo.html">网络</a></li>
+                    <li><a href="/category/wang-luo-python.html">网络,python</a></li>
+                </ul></nav>
+        </header><!-- /#banner -->
+<section id="content" class="body">
+  <article>
+    <header>
+      <h1 class="entry-title">
+        <a href="/slurmxi-tong-guan-li.html" rel="bookmark"
+           title="Permalink to slurm系统管理">slurm系统管理</a></h1>
+    </header>
+
+    <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2016-08-29T19:00:00+08:00">
+                Published: 一 29 八月 2016
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="/author/feng.html">feng</a>
+        </address>
+<p>In <a href="/category/misc.html">misc</a>.</p>
+
+</footer><!-- /.post-info -->      <h4>slurm 系统管理</h4>
+<p>使用slurmdbd进行记账管理，首先需要安装mysql服务</p>
+<div class="highlight"><pre><span></span>$ sudo apt-get install mysql-server
+$ sudo apt-get install libmysqlclient-dev
+</pre></div>
+
+
+<p>使用源码安装slurm</p>
+<div class="highlight"><pre><span></span>$ <span class="nb">cd</span> slurm
+$ ./configure --prefix<span class="o">=</span>/usr --sysconfdir<span class="o">=</span>/etc/slurm
+$ make
+$ sudo make install
+</pre></div>
+
+
+<p>如果需要开机启动，将<code>slurm/etc</code>文件夹下的 <code>init.d.slurm</code>拷贝到<code>/etc/init.d/slurm</code>中，
+对于ubunt系统，需要在<code>init.d.slurm</code>中修改，其中的<code>/etc/rc.d/init.d/functions</code>修改为
+‘/lib/lsb/init-fuctions’即可，对于slurmdbd服务，将<code>slurm/etc/init.d.slurmdbd</code>拷贝到
+<code>/etc/init.d/slurmdbd</code>中，与<code>init.d.slurm</code>做同样的修改。
+然后需要修改<code>slurm.conf</code>和<code>slurmdbd.conf</code>文件，将其拷贝到<code>/etc/slurm</code>文件夹下。
+修改完以后对<code>slurm.conf</code>和<code>slurmdbd.conf</code>进行修改
+对<code>slurm.conf</code>的修改部分</p>
+<div class="highlight"><pre><span></span>AccountingStorageType=accounting_storage/slurmdbd
+AccountingStorageUser=slurm
+AccountingStoreJobComment=YES
+</pre></div>
+
+
+<p>添加<code>slurmdbd.conf</code></p>
+<div class="highlight"><pre><span></span>AuthType=auth/munge
+DbdAddr=localhost
+DbdHost=localhost
+#DbdPort=7031
+SlurmUser=slurm
+#MessageTimeout=300
+DebugLevel=4
+#DefaultQOS=normal,standby
+LogFile=/var/log/slurm/slurmdbd.log
+PidFile=/var/run/slurmdbd.pid
+#PluginDir=/usr/lib/slurm
+#PrivateData=accounts,users,usage,jobs
+#TrackWCKey=yes
+StorageType=accounting_storage/slurmdbd
+StorageHost=localhost      #mysql所在的服务器
+StoragePort=1234           #端口
+StoragePass=password       #登录密码
+StorageUser=slurm          #用户
+#StorageLoc=slurm_acct_db
+</pre></div>
+
+
+<p>在mysql中创建相应的用户</p>
+<div class="highlight"><pre><span></span>$ mysql -u root -p
+mysql&gt; insert into mysql.user<span class="o">(</span>Host,User,Password<span class="o">)</span> values<span class="o">(</span><span class="s2">&quot;localhost&quot;</span>,<span class="s2">&quot;slurm&quot;</span>,password<span class="o">(</span><span class="s2">&quot;password&quot;</span><span class="o">))</span><span class="p">;</span>
+mysql&gt;grant all on slurm_acct_db.* to <span class="s1">&#39;slurm&#39;</span>@<span class="s1">&#39;localhost&#39;</span><span class="p">;</span>
+</pre></div>
+
+
+<p>然后就可以启动slurm和slurmdbd服务了</p>
+<div class="highlight"><pre><span></span>$ sudo /etc/init.d/slurm start
+$ sudo /etc/init.d/slurmdbd start
+</pre></div>
+
+
+<h4>sacctmgr管理</h4>
+<p>使用sacctmgr可以将用户关联到不同的集群，账户上，sacctmgr可以管理多个集群，首先应通过sacctmgr命令
+1. 向记账数据库中添加所管理的集群信息</p>
+<div class="highlight"><pre><span></span># sacctmgr add cluster name=name [option=value]
+</pre></div>
+
+
+<p>option 包括集群类别，公平份额，资源限制，QOS等设置
+可以通过<code>sacctmgr list cluster</code>查看集群信息，修改集群信息可以如下</p>
+<div class="highlight"><pre><span></span># sacctmgr modify cluster where name=clustername set modifyattribute=value
+</pre></div>
+
+
+<p>删除</p>
+<div class="highlight"><pre><span></span># sacctmgr delete cluster clustername
+</pre></div>
+
+
+<ol>
+<li>向记账数据库添加账户，账户为系统对用户的一种组织方式，可以通过将同一单位或者组织的用户添加到同一个
+账户中来实现对该单位或者组织使用集群的资源作出限制，在账户中还可以添加子账户，添加账户</li>
+</ol>
+<div class="highlight"><pre><span></span># sacctmgr add account name=accountname [option=value]
+</pre></div>
+
+
+<p>option 包括集群，组织单位，描述，父帐号，公平份额，资源限制，QOS
+账户也可以通过对应的命令进行修改和删除
+3. 向记账数据库中添加用户，当<code>slurm.conf</code>中<code>AccountingStorageEnforce</code>设置为 associations时，
+只用添加到记账数据库中的用户才能向集群提交作业。添加用户</p>
+<div class="highlight"><pre><span></span># sacctmgr add user name=username [option=value]
+</pre></div>
+
+
+<p>option 包含集群，账户，默认账户（一个用户可以天到多个账户中），负载特性，分区，管理级别，公平份额，资源限制，QOS</p>
+<h4>作业的QOS</h4>
+<p>QOS为服务质量，由系统管理员定义，命名，然后在用户使用时通过名字使用不同的QOS。QOS可以进行资源限制，作业提交检查，如限制提交作业数，限制节点或者处理器数，运行时间限制等，作业调度检查，超出QOS限制的作业不能运行，作业运行中检查等。创建QOS</p>
+<div class="highlight"><pre><span></span># sacctmgr add qos qosname where value=value
+</pre></div>
+
+
+<p>用户在提交作业时可以选择QOS，如未指定，使用账户关联的QOS，否则使用默认QOS。</p>
+    </div><!-- /.entry-content -->
+
+  </article>
+</section>
+        <section id="extras" class="body">
+                <div class="blogroll">
+                        <h2>blogroll</h2>
+                        <ul>
+                            <li><a href="http://getpelican.com/">Pelican</a></li>
+                            <li><a href="http://python.org/">Python.org</a></li>
+                            <li><a href="http://jinja.pocoo.org/">Jinja2</a></li>
+                            <li><a href="#">You can modify those links in your config file</a></li>
+                        </ul>
+                </div><!-- /.blogroll -->
+                <div class="social">
+                        <h2>social</h2>
+                        <ul>
+
+                            <li><a href="#">You can add links in your config file</a></li>
+                            <li><a href="#">Another social link</a></li>
+                        </ul>
+                </div><!-- /.social -->
+        </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is by <a href="http://coding.smashingmagazine.com/2009/08/04/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+        </footer><!-- /#contentinfo -->
+
+</body>
+</html>

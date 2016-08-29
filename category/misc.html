@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+        <meta charset="utf-8" />
+        <title>feng - misc</title>
+        <link rel="stylesheet" href="/theme/css/main.css" />
+
+        <!--[if IE]>
+            <script src="https://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+</head>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+                <h1><a href="/">feng </a></h1>
+                <nav><ul>
+                    <li><a href="/category/hpc.html">hpc</a></li>
+                    <li><a href="/category/linuxyun-wei.html">linux运维</a></li>
+                    <li class="active"><a href="/category/misc.html">misc</a></li>
+                    <li><a href="/category/wang-luo.html">网络</a></li>
+                    <li><a href="/category/wang-luo-python.html">网络,python</a></li>
+                </ul></nav>
+        </header><!-- /#banner -->
+
+            <aside id="featured" class="body">
+                <article>
+                    <h1 class="entry-title"><a href="/slurm-web.html">slurm-web</a></h1>
+<footer class="post-info">
+        <abbr class="published" title="2016-08-29T19:00:00+08:00">
+                Published: 一 29 八月 2016
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="/author/feng.html">feng</a>
+        </address>
+<p>In <a href="/category/misc.html">misc</a>.</p>
+
+</footer><!-- /.post-info --><h4>slurm-web</h4>
+<p>slurm-web是一个用来查看HPC集群的当前任务和节点状态等的开源网页实现，它包含两个网页实现，一个是dashboard，用来在网页上显示节点任务和节点状态，一个是restapi，用来获取节点任务和节点状态等。
+dashboard依赖的模块
+<em> <code>async</code>
+</em> <code>bootstrap</code>
+<em> <code>d3</code>
+</em> <code>handlebars</code>
+<em> <code>jquery</code>
+</em> <code>jquery-flot</code>
+<em> <code>jquery-tablesorter</code>
+</em> <code>require</code>
+* <code>three</code></p>
+<p>restapi依赖的模块
+<em> <code>Flask</code>
+</em> <code>pyslurm</code>
+<em> <code>ClusterShell</code>
+</em> <code>mock</code></p>
+<p>slurm-web的坑点比较多，而且将dashboard和restapi分开实现，目前无法按照源码运行，运行源码会遇到的问题，第一个是jquery里的ajax方法没有success方法，而在源码里面有用到success方法，这应该是jquery版本兼容的问题，将success改成done，error改成fail就可以了，还有遇到一个跨域问题，网上查找说是由于两个web服务器用的不同端口，不能直接通过dashbord访问到restapi，通过jsonp方法可以实现跨域通信，目前能看到的效果是可以查看slurm的job。感觉通过pyslurm获取json格式的数据，将pyslurm接口简单封装为一个模块，然后再在web后端调用该模块，这样应该还好一点。</p>                </article>
+            </aside><!-- /#featured -->
+                <section id="content" class="body">
+                    <h1>Other articles</h1>
+                    <hr />
+                    <ol id="posts-list" class="hfeed">
+
+            <li><article class="hentry">
+                <header>
+                    <h1><a href="/slurmxi-tong-guan-li.html" rel="bookmark"
+                           title="Permalink to slurm系统管理">slurm系统管理</a></h1>
+                </header>
+
+                <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2016-08-29T19:00:00+08:00">
+                Published: 一 29 八月 2016
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="/author/feng.html">feng</a>
+        </address>
+<p>In <a href="/category/misc.html">misc</a>.</p>
+
+</footer><!-- /.post-info -->                <h4>slurm 系统管理</h4>
+<p>使用slurmdbd进行记账管理，首先需要安装mysql服务</p>
+<div class="highlight"><pre><span></span>$ sudo apt-get install mysql-server
+$ sudo apt-get install libmysqlclient-dev
+</pre></div>
+
+
+<p>使用源码安装slurm</p>
+<div class="highlight"><pre><span></span>$ <span class="nb">cd</span> slurm
+$ ./configure --prefix<span class="o">=</span>/usr --sysconfdir<span class="o">=</span>/etc/slurm
+$ make
+$ sudo make install
+</pre></div>
+
+
+<p>如果需要开机启动，将<code>slurm/etc</code>文件夹下的 <code>init.d.slurm</code>拷贝到<code>/etc/init.d/slurm</code>中，
+对于ubunt系统，需要在<code>init.d.slurm</code>中修改，其中的<code>/etc/rc.d/init ...</code></p>
+                <a class="readmore" href="/slurmxi-tong-guan-li.html">read more</a>
+                </div><!-- /.entry-content -->
+            </article></li>
+                </ol><!-- /#posts-list -->
+                </section><!-- /#content -->
+        <section id="extras" class="body">
+                <div class="blogroll">
+                        <h2>blogroll</h2>
+                        <ul>
+                            <li><a href="http://getpelican.com/">Pelican</a></li>
+                            <li><a href="http://python.org/">Python.org</a></li>
+                            <li><a href="http://jinja.pocoo.org/">Jinja2</a></li>
+                            <li><a href="#">You can modify those links in your config file</a></li>
+                        </ul>
+                </div><!-- /.blogroll -->
+                <div class="social">
+                        <h2>social</h2>
+                        <ul>
+
+                            <li><a href="#">You can add links in your config file</a></li>
+                            <li><a href="#">Another social link</a></li>
+                        </ul>
+                </div><!-- /.social -->
+        </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is by <a href="http://coding.smashingmagazine.com/2009/08/04/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+        </footer><!-- /#contentinfo -->
+
+</body>
+</html>
