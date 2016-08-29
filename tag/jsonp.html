@@ -2,7 +2,7 @@
 <html lang="zh">
 <head>
         <meta charset="utf-8" />
-        <title>jsonp跨域通信</title>
+        <title>Feng's Blog - jsonp</title>
         <link rel="stylesheet" href="/theme/css/main.css" />
 
         <!--[if IE]>
@@ -14,19 +14,14 @@
         <header id="banner" class="body">
                 <h1><a href="/">Feng's Blog </a></h1>
                 <nav><ul>
-                    <li class="active"><a href="/category/ji-zhu.html">技术</a></li>
+                    <li><a href="/category/ji-zhu.html">技术</a></li>
                     <li><a href="/category/misc.html">misc</a></li>
                 </ul></nav>
         </header><!-- /#banner -->
-<section id="content" class="body">
-  <article>
-    <header>
-      <h1 class="entry-title">
-        <a href="/jsonpkua-yu-tong-xin.html" rel="bookmark"
-           title="Permalink to jsonp跨域通信">jsonp跨域通信</a></h1>
-    </header>
 
-    <div class="entry-content">
+            <aside id="featured" class="body">
+                <article>
+                    <h1 class="entry-title"><a href="/jsonpkua-yu-tong-xin.html">jsonp跨域通信</a></h1>
 <footer class="post-info">
         <abbr class="published" title="2016-08-29T18:56:00+08:00">
                 Published: 一 29 八月 2016
@@ -37,7 +32,7 @@
         </address>
 <p>In <a href="/category/ji-zhu.html">技术</a>.</p>
 <p>tags: <a href="/tag/jsonp.html">jsonp</a> <a href="/tag/python.html">python</a> </p>
-</footer><!-- /.post-info -->      <h4>jsonp跨域通信</h4>
+</footer><!-- /.post-info --><h4>jsonp跨域通信</h4>
 <p>在浏览器中，有一个同源策略，只有拥有相同域名、协议和端口号的两个网页，才能相互获取数据，如果需要跨域读取数据，使用ajax无法实现。而在web网页中，js文件不受同源策略的影响，因此利用利用这个特点可以将访问数据（通常是json数据）封装成js文件来实现跨域通信，这就是jsonp。</p>
 <h4>示例</h4>
 <ul>
@@ -161,11 +156,8 @@ $(document).ready(function(){
 </pre></div>
 
 
-<p>在服务端api的返回值中，需要获取callback函数名称，然后将数据作为callback函数的参数返回。</p>
-    </div><!-- /.entry-content -->
-
-  </article>
-</section>
+<p>在服务端api的返回值中，需要获取callback函数名称，然后将数据作为callback函数的参数返回。</p>                </article>
+            </aside><!-- /#featured -->
         <section id="extras" class="body">
                 <div class="blogroll">
                         <h2>blogroll</h2>
